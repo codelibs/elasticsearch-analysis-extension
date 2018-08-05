@@ -14,6 +14,7 @@ import org.codelibs.elasticsearch.extension.analysis.KuromojiIterationMarkCharFi
 import org.codelibs.elasticsearch.extension.analysis.KuromojiKatakanaStemmerFactory;
 import org.codelibs.elasticsearch.extension.analysis.KuromojiPartOfSpeechFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.KuromojiReadingFormFilterFactory;
+import org.codelibs.elasticsearch.extension.analysis.NGramSynonymTokenizerFactory;
 import org.codelibs.elasticsearch.extension.analysis.NumberConcatenationFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.PatternConcatenationFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.PosConcatenationFilterFactory;
@@ -68,6 +69,7 @@ public class ExtensionPlugin extends Plugin implements AnalysisPlugin {
         final Map<String, AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
         extra.put("reloadable_kuromoji_tokenizer", ReloadableKuromojiTokenizerFactory::new);
         extra.put("reloadable_kuromoji", ReloadableKuromojiTokenizerFactory::new);
+        extra.put("ngram_synonym", NGramSynonymTokenizerFactory::new);
         return extra;
     }
 
