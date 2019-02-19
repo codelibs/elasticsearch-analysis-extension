@@ -26,9 +26,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractCharFilterFactory;
-import org.elasticsearch.index.analysis.MultiTermAwareComponent;
+import org.elasticsearch.index.analysis.NormalizingCharFilterFactory;
 
-public class KuromojiIterationMarkCharFilterFactory extends AbstractCharFilterFactory implements MultiTermAwareComponent {
+public class KuromojiIterationMarkCharFilterFactory extends AbstractCharFilterFactory implements NormalizingCharFilterFactory {
 
     private final boolean normalizeKanji;
     private final boolean normalizeKana;
@@ -42,10 +42,5 @@ public class KuromojiIterationMarkCharFilterFactory extends AbstractCharFilterFa
     @Override
     public Reader create(final Reader reader) {
         return new JapaneseIterationMarkCharFilter(reader, normalizeKanji, normalizeKana);
-    }
-
-    @Override
-    public Object getMultiTermComponent() {
-        return this;
     }
 }

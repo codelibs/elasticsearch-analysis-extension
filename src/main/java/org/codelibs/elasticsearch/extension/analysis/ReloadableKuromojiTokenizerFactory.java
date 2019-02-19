@@ -88,7 +88,7 @@ public class ReloadableKuromojiTokenizerFactory extends
     private final boolean discartPunctuation;
 
     public ReloadableKuromojiTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name, final Settings settings) {
-        super(indexSettings, name, settings);
+        super(indexSettings, settings);
         this.env = env;
         this.settings = settings;
         mode = KuromojiTokenizerFactory.getMode(settings);
