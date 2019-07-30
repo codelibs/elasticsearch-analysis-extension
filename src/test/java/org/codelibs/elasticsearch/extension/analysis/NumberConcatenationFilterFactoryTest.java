@@ -94,7 +94,7 @@ public class NumberConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(1, tokens.size());
                 assertEquals("100円", tokens.get(0).get("token").toString());
             }
@@ -106,7 +106,7 @@ public class NumberConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(2, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("100人", tokens.get(1).get("token").toString());
@@ -119,7 +119,7 @@ public class NumberConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(5, tokens.size());
                 assertEquals("1", tokens.get(0).get("token").toString());
                 assertEquals("1人", tokens.get(1).get("token").toString());

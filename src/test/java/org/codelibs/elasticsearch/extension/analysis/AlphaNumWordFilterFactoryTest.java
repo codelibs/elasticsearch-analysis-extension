@@ -74,7 +74,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(1, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
             }
@@ -85,7 +85,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(2, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("bbb", tokens.get(1).get("token").toString());
@@ -97,7 +97,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("aa1", tokens.get(0).get("token").toString());
                 assertEquals("bb2", tokens.get(1).get("token").toString());
@@ -110,7 +110,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("亜", tokens.get(1).get("token").toString());
@@ -123,7 +123,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("嬉", tokens.get(0).get("token").toString());
                 assertEquals("し", tokens.get(1).get("token").toString());
@@ -160,7 +160,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(1, tokens.size());
                 assertEquals("aa", tokens.get(0).get("token").toString());
             }
@@ -171,7 +171,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(2, tokens.size());
                 assertEquals("aa", tokens.get(0).get("token").toString());
                 assertEquals("bb", tokens.get(1).get("token").toString());
@@ -183,7 +183,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("aa", tokens.get(0).get("token").toString());
                 assertEquals("bb", tokens.get(1).get("token").toString());
@@ -196,7 +196,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("aa", tokens.get(0).get("token").toString());
                 assertEquals("亜", tokens.get(1).get("token").toString());
@@ -209,7 +209,7 @@ public class AlphaNumWordFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ngram_word_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("嬉", tokens.get(0).get("token").toString());
                 assertEquals("し", tokens.get(1).get("token").toString());

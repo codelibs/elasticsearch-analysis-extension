@@ -154,7 +154,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("東京", tokens.get(0).get("token").toString());
                 assertEquals("スカイツリ", tokens.get(1).get("token").toString());
             }
@@ -164,7 +164,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("朝", tokens.get(0).get("token").toString());
                 assertEquals("青龍", tokens.get(1).get("token").toString());
             }
@@ -193,7 +193,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("東京", tokens.get(0).get("token").toString());
                 assertEquals("スカイ", tokens.get(1).get("token").toString());
                 assertEquals("ツリー", tokens.get(2).get("token").toString());
@@ -204,7 +204,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(text, tokens.get(0).get("token").toString());
             }
         }
@@ -274,7 +274,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_imark_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(values[1], tokens.get(0).get("token").toString());
             }
         }
@@ -345,7 +345,7 @@ public class ExtensionPluginTest {
                     .body("{\"analyzer\":\"ja_psmark_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("あー", tokens.get(0).get("token").toString());
             }
         }
@@ -415,7 +415,7 @@ public class ExtensionPluginTest {
                 .body("{\"analyzer\":\"ja_knum_analyzer\",\"text\":\"" + text + "\"}").execute()) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                    .getContent(EcrCurl.jsonParser).get("tokens");
+                    .getContent(EcrCurl.jsonParser()).get("tokens");
             assertEquals("190000000", tokens.get(0).get("token").toString());
             assertEquals("円", tokens.get(1).get("token").toString());
         }

@@ -68,7 +68,7 @@ public class FlexiblePorterStemFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"stem1_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(7, tokens.size());
                 assertEquals("consist", tokens.get(0).get("token").toString());
                 assertEquals("consist", tokens.get(1).get("token").toString());

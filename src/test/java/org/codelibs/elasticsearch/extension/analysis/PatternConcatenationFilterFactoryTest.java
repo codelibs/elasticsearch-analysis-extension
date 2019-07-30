@@ -72,7 +72,7 @@ public class PatternConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(1, tokens.size());
                 assertEquals("平成12年", tokens.get(0).get("token").toString());
             }
@@ -84,7 +84,7 @@ public class PatternConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(3, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("昭和3年", tokens.get(1).get("token").toString());
@@ -98,7 +98,7 @@ public class PatternConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(2, tokens.size());
                 assertEquals("大正", tokens.get(0).get("token").toString());
                 assertEquals("10年", tokens.get(1).get("token").toString());
@@ -111,7 +111,7 @@ public class PatternConcatenationFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_concat_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(2, tokens.size());
                 assertEquals("昭和", tokens.get(0).get("token").toString());
                 assertEquals("10", tokens.get(1).get("token").toString());

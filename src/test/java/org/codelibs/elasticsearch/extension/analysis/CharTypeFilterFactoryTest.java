@@ -71,7 +71,7 @@ public class CharTypeFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(4, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
@@ -106,7 +106,7 @@ public class CharTypeFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(4, tokens.size());
                 assertEquals("aa1", tokens.get(0).get("token").toString());
                 assertEquals("111", tokens.get(1).get("token").toString());
@@ -141,7 +141,7 @@ public class CharTypeFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(7, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
@@ -179,7 +179,7 @@ public class CharTypeFilterFactoryTest {
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser).get("tokens");
+                        .getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(9, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
