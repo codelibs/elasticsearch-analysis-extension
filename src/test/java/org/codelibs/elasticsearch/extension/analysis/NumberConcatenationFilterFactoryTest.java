@@ -43,8 +43,9 @@ public class NumberConcatenationFilterFactoryTest {
             public void build(final int number, final Builder settingsBuilder) {
                 settingsBuilder.put("http.cors.enabled", true);
                 settingsBuilder.put("http.cors.allow-origin", "*");
-                settingsBuilder.putList("discovery.seed_hosts", "127.0.0.1:9301");
-                settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
+                settingsBuilder.put("discovery.type", "single-node");
+                // settingsBuilder.putList("discovery.seed_hosts", "127.0.0.1:9301");
+                // settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
         }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode).pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
 
