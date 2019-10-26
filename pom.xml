@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>org.codelibs</groupId>
 			<artifactId>analyzers</artifactId>
-			<version>8.0.0.0</version>
+			<version>${lucene.version}.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
