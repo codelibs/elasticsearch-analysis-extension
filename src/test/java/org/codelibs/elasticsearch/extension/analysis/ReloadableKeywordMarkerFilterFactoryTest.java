@@ -79,7 +79,7 @@ public class ReloadableKeywordMarkerFilterFactoryTest {
 
         final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
                 + "\"stem1_filter\":{\"type\":\"flexible_porter_stem\",\"step1\":true,\"step2\":false,\"step3\":false,\"step4\":false,\"step5\":false,\"step6\":false},"
-                + "\"marker_filter\":{\"type\":\"reloadable_keyword_marker\",\"keywords_path\":\"keywords.txt\",\"reload_interval\":\"1s\"}"
+                + "\"marker_filter\":{\"type\":\"reloadable_keyword_marker\",\"keywords_path\":\"keywords.txt\",\"reload_interval\":\"500ms\"}"
                 + "},"//
                 + "\"analyzer\":{" + "\"default_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
                 + "\"stem1_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"marker_filter\",\"stem1_filter\"]}"

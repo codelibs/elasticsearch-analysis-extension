@@ -78,7 +78,7 @@ public class ReloadableStopFilterFactoryTest {
         final String index = "dataset";
 
         final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
-                + "\"stop_filter\":{\"type\":\"reloadable_stop\",\"stopwords_path\":\"stopwords.txt\",\"reload_interval\":\"1s\"}" + "},"//
+                + "\"stop_filter\":{\"type\":\"reloadable_stop\",\"stopwords_path\":\"stopwords.txt\",\"reload_interval\":\"500ms\"}" + "},"//
                 + "\"analyzer\":{" + "\"default_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
                 + "\"stop_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"stop_filter\"]}" + "}"//
                 + "}}}";
