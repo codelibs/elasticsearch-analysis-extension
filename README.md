@@ -7,7 +7,7 @@ Elasticsearch Analysis Extension Plugin provides Tokenizer/CharFilter/TokenFilte
 
 ## Version
 
-[Versions in Maven Repository](http://central.maven.org/maven2/org/codelibs/elasticsearch-analysis-extension/)
+[Versions in Maven Repository](https://repo1.maven.org/maven2/org/codelibs/elasticsearch-analysis-extension/)
 
 ### Issues/Questions
 
