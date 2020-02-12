@@ -193,7 +193,6 @@ public final class NGramSynonymTokenizer extends Tokenizer {
     BytesRef getLongestMatchOutput(final char[] src, final int start) throws IOException {
         BytesRef pendingOutput = fst.outputs.getNoOutput();
         fst.getFirstArc(scratchArc);
-        assert scratchArc.output == fst.outputs.getNoOutput();
         BytesRef matchOutput = null;
 
         int index = 0;
@@ -205,11 +204,11 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                 return matchOutput;
             }
 
-            pendingOutput = fst.outputs.add(pendingOutput, scratchArc.output);
+            pendingOutput = fst.outputs.add(pendingOutput, scratchArc.output());
 
             if (scratchArc.isFinal()) {
                 matchOutput = fst.outputs.add(pendingOutput,
-                        scratchArc.nextFinalOutput);
+                        scratchArc.nextFinalOutput());
                 longestMatchEndOffset = start + index
                         + Character.charCount(codePoint);
             }
