@@ -231,49 +231,40 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                     afterSynonymProduced);
 
             // enqueue prev-synonym
+            processPrevSynonym(synonym.startOffset, idx > 0 ? synonyms.get(idx - 1).endOffset : 0);
+
             if (expand) {
-                int limitOffset = 0;
-                if (idx > 0) {
-                    limitOffset = synonyms.get(idx - 1).endOffset;
-                }
-                processPrevSynonym(synonym.startOffset, limitOffset);
+                queue.add(synonym);
             }
 
-            queue.add(synonym);
-
             // enqueue synonyms
-            if (expand) {
-                bytesReader.reset(synonym.output.bytes, synonym.output.offset,
-                        synonym.output.length);
-                final int code = bytesReader.readVInt();
-                final int count = code >>> 1;
-                for (int i = 0; i < count; i++) {
-                    synonymMap.words.get(bytesReader.readVInt(), scratchBytes);
-                    if (scratchChars.chars.length < scratchBytes.length) {
-                        scratchChars.chars = new char[scratchBytes.length];
-                    }
-                    scratchChars.length = UnicodeUtil.UTF8toUTF16(scratchBytes,
-                            scratchChars.chars);
-                    final String word = scratchChars.toString();
-                    int posInc = 0, seq = i + 1;
-                    if (synonym.word.equals(word)) {
-                        posInc = 1;
-                        seq = 0;
-                    }
-                    queue.add(new MyToken(word, synonym.startOffset,
-                            synonym.endOffset, posInc, seq));
+            bytesReader.reset(synonym.output.bytes, synonym.output.offset, synonym.output.length);
+            final int code = bytesReader.readVInt();
+            final int count = code >>> 1;
+            for (int i = 0; i < count; i++) {
+                synonymMap.words.get(bytesReader.readVInt(), scratchBytes);
+                if (scratchChars.chars.length < scratchBytes.length) {
+                    scratchChars.chars = new char[scratchBytes.length];
+                }
+                scratchChars.length = UnicodeUtil.UTF8toUTF16(scratchBytes, scratchChars.chars);
+                final String word = scratchChars.toString();
+                int posInc = 0;
+                int seq = i + 1;
+                if (synonym.word.equals(word)) {
+                    posInc = 1;
+                    seq = 0;
+                } else if (!expand) {
+                    posInc = 1;
+                }
+                queue.add(new MyToken(word, synonym.startOffset, synonym.endOffset, posInc, seq));
+                if (!expand) {
+                    break;
                 }
             }
 
             // enqueue after-synonym
-            if (expand) {
-                int limitOffset = block.length();
-                if (idx < synonyms.size() - 1) {
-                    limitOffset = synonyms.get(idx + 1).startOffset;
-                }
-                afterSynonymProduced = processAfterSynonym(synonym.endOffset,
-                        limitOffset);
-            }
+            afterSynonymProduced =
+                    processAfterSynonym(synonym.endOffset, idx < synonyms.size() - 1 ? synonyms.get(idx + 1).startOffset : block.length());
 
             nextStart = synonym.endOffset;
         }
