@@ -388,17 +388,17 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bba"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcba"));
     stream.reset();
-    assertTokenStream(stream, "dc,0,2,1/cb,1,3,1/a,3,4,1");
+    assertTokenStream(stream, "dc,0,2,1/cb,1,3,1/b,2,3,0/a,3,4,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcba"));
     stream.reset();
-    assertTokenStream(stream, "ed,0,2,1/dc,1,3,1/cb,2,4,1/a,4,5,1");
+    assertTokenStream(stream, "ed,0,2,1/dc,1,3,1/cb,2,4,1/b,3,4,0/a,4,5,1");
   }
 
   @Test
@@ -411,17 +411,17 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bba"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcba"));
     stream.reset();
-    assertTokenStream(stream, "dcb,0,3,1/a,3,4,1");
+    assertTokenStream(stream, "dcb,0,3,1/cb,1,3,0/b,2,3,0/a,3,4,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcba"));
     stream.reset();
-    assertTokenStream(stream, "edc,0,3,1/dcb,1,4,1/a,4,5,1");
+    assertTokenStream(stream, "edc,0,3,1/dcb,1,4,1/cb,2,4,0/b,3,4,0/a,4,5,1");
   }
 
   @Test
@@ -434,22 +434,22 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bba"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcba"));
     stream.reset();
-    assertTokenStream(stream, "dcb,0,3,1/a,3,4,1");
+    assertTokenStream(stream, "dcb,0,3,1/cb,1,3,0/b,2,3,0/a,3,4,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcba"));
     stream.reset();
-    assertTokenStream(stream, "edcb,0,4,1/a,4,5,1");
+    assertTokenStream(stream, "edcb,0,4,1/dcb,1,4,0/cb,2,4,0/b,3,4,0/a,4,5,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("fedcba"));
     stream.reset();
-    assertTokenStream(stream, "fedc,0,4,1/edcb,1,5,1/a,5,6,1");
+    assertTokenStream(stream, "fedc,0,4,1/edcb,1,5,1/dcb,2,5,0/cb,3,5,0/b,4,5,0/a,5,6,1");
   }
 
   @Test
@@ -520,7 +520,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "edc,0,3,1/dcb,1,4,1/cb,2,4,0/b,3,4,0/a,4,5,1/aa,4,5,0");
   }
-  
+
   @Test
   public void testPrevStrSingleSynonymExpand4() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(4, true, "a,aa");
@@ -605,17 +605,17 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abb"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bb,1,3,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bb,1,3,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abcd"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bcd,1,4,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bc,1,3,0/bcd,1,4,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abcde"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bcd,1,4,1/cde,2,5,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bc,1,3,0/bcd,1,4,0/cde,2,5,1");
   }
 
   @Test
@@ -628,22 +628,22 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abb"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bb,1,3,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bb,1,3,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abcd"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bcd,1,4,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bc,1,3,0/bcd,1,4,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abcde"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bcde,1,5,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bc,1,3,0/bcd,1,4,0/bcde,1,5,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("abcdef"));
     stream.reset();
-    assertTokenStream(stream, "a,0,1,1/bcde,1,5,1/cdef,2,6,1");
+    assertTokenStream(stream, "a,0,1,1/b,1,2,1/bc,1,3,0/bcd,1,4,0/bcde,1,5,0/cdef,2,6,1");
   }
 
   @Test
@@ -691,7 +691,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "a,0,1,1/aa,0,1,0/b,1,2,1/bc,1,3,0/cd,2,4,1/de,3,5,1");
   }
-  
+
   @Test
   public void testAfterStrSingleSynonymExpand3() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(3, true, "a,aa");
@@ -714,7 +714,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "a,0,1,1/aa,0,1,0/b,1,2,1/bc,1,3,0/bcd,1,4,0/cde,2,5,1");
   }
-  
+
   @Test
   public void testAfterStrSingleSynonymExpand4() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(4, true, "a,aa");
@@ -742,7 +742,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "a,0,1,1/aa,0,1,0/b,1,2,1/bc,1,3,0/bcd,1,4,0/bcde,1,5,0/cdef,2,6,1");
   }
-  
+
   @Test
   public void testSandwichStr1() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, false, "a,aa");
@@ -946,7 +946,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "a,0,1,1/aa,0,1,0/b,1,2,1/bc,1,3,0/bcd,1,4,0/bcde,1,5,0/cdef,2,6,1/def,3,6,0/ef,4,6,0/f,5,6,0/a,6,7,1/aa,6,7,0");
   }
-  
+
   @Test
   public void testSandwichSynonym1() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, false, "a,aa");
@@ -980,17 +980,17 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bbabb"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1/bb,3,5,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1/b,3,4,1/bb,3,5,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcbabcd"));
     stream.reset();
-    assertTokenStream(stream, "dc,0,2,1/cb,1,3,1/a,3,4,1/bc,4,6,1/cd,5,7,1");
+    assertTokenStream(stream, "dc,0,2,1/cb,1,3,1/b,2,3,0/a,3,4,1/b,4,5,1/bc,4,6,0/cd,5,7,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(2, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcbabcde"));
     stream.reset();
-    assertTokenStream(stream, "ed,0,2,1/dc,1,3,1/cb,2,4,1/a,4,5,1/bc,5,7,1/cd,6,8,1/de,7,9,1");
+    assertTokenStream(stream, "ed,0,2,1/dc,1,3,1/cb,2,4,1/b,3,4,0/a,4,5,1/b,5,6,1/bc,5,7,0/cd,6,8,1/de,7,9,1");
   }
 
   @Test
@@ -1003,22 +1003,22 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bbabb"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1/bb,3,5,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1/b,3,4,1/bb,3,5,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcbabcd"));
     stream.reset();
-    assertTokenStream(stream, "dcb,0,3,1/a,3,4,1/bcd,4,7,1");
+    assertTokenStream(stream, "dcb,0,3,1/cb,1,3,0/b,2,3,0/a,3,4,1/b,4,5,1/bc,4,6,0/bcd,4,7,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcbabcde"));
     stream.reset();
-    assertTokenStream(stream, "edc,0,3,1/dcb,1,4,1/a,4,5,1/bcd,5,8,1/cde,6,9,1");
+    assertTokenStream(stream, "edc,0,3,1/dcb,1,4,1/cb,2,4,0/b,3,4,0/a,4,5,1/b,5,6,1/bc,5,7,0/bcd,5,8,0/cde,6,9,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("fedcbabcdef"));
     stream.reset();
-    assertTokenStream(stream, "fed,0,3,1/edc,1,4,1/dcb,2,5,1/a,5,6,1/bcd,6,9,1/cde,7,10,1/def,8,11,1");
+    assertTokenStream(stream, "fed,0,3,1/edc,1,4,1/dcb,2,5,1/cb,3,5,0/b,4,5,0/a,5,6,1/b,6,7,1/bc,6,8,0/bcd,6,9,0/cde,7,10,1/def,8,11,1");
   }
 
   @Test
@@ -1031,24 +1031,24 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("bbabb"));
     stream.reset();
-    assertTokenStream(stream, "bb,0,2,1/a,2,3,1/bb,3,5,1");
+    assertTokenStream(stream, "bb,0,2,1/b,1,2,0/a,2,3,1/b,3,4,1/bb,3,5,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("dcbabcd"));
     stream.reset();
-    assertTokenStream(stream, "dcb,0,3,1/a,3,4,1/bcd,4,7,1");
+    assertTokenStream(stream, "dcb,0,3,1/cb,1,3,0/b,2,3,0/a,3,4,1/b,4,5,1/bc,4,6,0/bcd,4,7,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("edcbabcde"));
     stream.reset();
-    assertTokenStream(stream, "edcb,0,4,1/a,4,5,1/bcde,5,9,1");
+    assertTokenStream(stream, "edcb,0,4,1/dcb,1,4,0/cb,2,4,0/b,3,4,0/a,4,5,1/b,5,6,1/bc,5,7,0/bcd,5,8,0/bcde,5,9,0");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa");
     stream = a.tokenStream("f", new StringReader("fedcbabcdef"));
     stream.reset();
-    assertTokenStream(stream, "fedc,0,4,1/edcb,1,5,1/a,5,6,1/bcde,6,10,1/cdef,7,11,1");
+    assertTokenStream(stream, "fedc,0,4,1/edcb,1,5,1/dcb,2,5,0/cb,3,5,0/b,4,5,0/a,5,6,1/b,6,7,1/bc,6,8,0/bcd,6,9,0/bcde,6,10,0/cdef,7,11,1");
   }
-  
+
   @Test
   public void testSandwichSynonymExpand1() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, true, "a,aa");
@@ -1150,7 +1150,7 @@ public class NGramSynonymTokenizerTest {
     stream.reset();
     assertTokenStream(stream, "fedc,0,4,1/edcb,1,5,1/dcb,2,5,0/cb,3,5,0/b,4,5,0/a,5,6,1/aa,5,6,0/b,6,7,1/bc,6,8,0/bcd,6,9,0/bcde,6,10,0/cdef,7,11,1");
   }
-  
+
   @Test
   public void testComplex1() throws Exception {
     Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, false, "a,aa/b,bb");
@@ -1207,22 +1207,22 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("ccabcca"));
     stream.reset();
-    assertTokenStream(stream, "cc,0,2,1/a,2,3,1/b,3,4,1/cc,4,6,1/a,6,7,1");
+    assertTokenStream(stream, "cc,0,2,1/c,1,2,0/a,2,3,1/b,3,4,1/c,4,5,1/cc,4,6,0/c,5,6,0/a,6,7,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("edcabcdea"));
     stream.reset();
-    assertTokenStream(stream, "edc,0,3,1/a,3,4,1/b,4,5,1/cde,5,8,1/a,8,9,1");
+    assertTokenStream(stream, "edc,0,3,1/dc,1,3,0/c,2,3,0/a,3,4,1/b,4,5,1/c,5,6,1/cd,5,7,0/cde,5,8,0/de,6,8,0/e,7,8,0/a,8,9,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("fedcabcdefa"));
     stream.reset();
-    assertTokenStream(stream, "fed,0,3,1/edc,1,4,1/a,4,5,1/b,5,6,1/cde,6,9,1/def,7,10,1/a,10,11,1");
+    assertTokenStream(stream, "fed,0,3,1/edc,1,4,1/dc,2,4,0/c,3,4,0/a,4,5,1/b,5,6,1/c,6,7,1/cd,6,8,0/cde,6,9,0/def,7,10,1/ef,8,10,0/f,9,10,0/a,10,11,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(3, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("gfedcabcdefga"));
     stream.reset();
-    assertTokenStream(stream, "gfe,0,3,1/fed,1,4,1/edc,2,5,1/a,5,6,1/b,6,7,1/cde,7,10,1/def,8,11,1/efg,9,12,1/a,12,13,1");
+    assertTokenStream(stream, "gfe,0,3,1/fed,1,4,1/edc,2,5,1/dc,3,5,0/c,4,5,0/a,5,6,1/b,6,7,1/c,7,8,1/cd,7,9,0/cde,7,10,0/def,8,11,1/efg,9,12,1/fg,10,12,0/g,11,12,0/a,12,13,1");
   }
 
   @Test
@@ -1235,22 +1235,22 @@ public class NGramSynonymTokenizerTest {
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("ccabcca"));
     stream.reset();
-    assertTokenStream(stream, "cc,0,2,1/a,2,3,1/b,3,4,1/cc,4,6,1/a,6,7,1");
+    assertTokenStream(stream, "cc,0,2,1/c,1,2,0/a,2,3,1/b,3,4,1/c,4,5,1/cc,4,6,0/c,5,6,0/a,6,7,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("edcabcdea"));
     stream.reset();
-    assertTokenStream(stream, "edc,0,3,1/a,3,4,1/b,4,5,1/cde,5,8,1/a,8,9,1");
+    assertTokenStream(stream, "edc,0,3,1/dc,1,3,0/c,2,3,0/a,3,4,1/b,4,5,1/c,5,6,1/cd,5,7,0/cde,5,8,0/de,6,8,0/e,7,8,0/a,8,9,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("fedcabcdefa"));
     stream.reset();
-    assertTokenStream(stream, "fedc,0,4,1/a,4,5,1/b,5,6,1/cdef,6,10,1/a,10,11,1");
+    assertTokenStream(stream, "fedc,0,4,1/edc,1,4,0/dc,2,4,0/c,3,4,0/a,4,5,1/b,5,6,1/c,6,7,1/cd,6,8,0/cde,6,9,0/cdef,6,10,0/def,7,10,0/ef,8,10,0/f,9,10,0/a,10,11,1");
 
     a = new NGramSynonymTokenizerTestAnalyzer(4, false, "a,aa/b,bb");
     stream = a.tokenStream("f", new StringReader("gfedcabcdefga"));
     stream.reset();
-    assertTokenStream(stream, "gfed,0,4,1/fedc,1,5,1/a,5,6,1/b,6,7,1/cdef,7,11,1/defg,8,12,1/a,12,13,1");
+    assertTokenStream(stream, "gfed,0,4,1/fedc,1,5,1/edc,2,5,0/dc,3,5,0/c,4,5,0/a,5,6,1/b,6,7,1/c,7,8,1/cd,7,9,0/cde,7,10,0/cdef,7,11,0/defg,8,12,1/efg,9,12,0/fg,10,12,0/g,11,12,0/a,12,13,1");
   }
   
   @Test
