@@ -133,9 +133,11 @@ public class ReloadableKeywordMarkerFilterFactoryTest {
     }
 
     private void updateDictionary(File file, String content) throws IOException, UnsupportedEncodingException, FileNotFoundException {
+        long old = file.lastModified();
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
             bw.write(content);
             bw.flush();
         }
+        System.out.println(file.getAbsolutePath() + ": " + (file.lastModified() - old));
     }
 }
