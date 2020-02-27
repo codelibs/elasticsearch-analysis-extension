@@ -108,10 +108,9 @@ public class NGramSynonymTokenizerTest {
   }
   
   private NGramSynonymTokenizer getTokenizer(String input) throws IOException {
-    NGramSynonymTokenizer tokenizer = new NGramSynonymTokenizer(
-        NGramSynonymTokenizer.DEFAULT_N_SIZE,
-        NGramSynonymTokenizer.DEFAULT_DELIMITERS, false, true, null);
-    tokenizer.setReader(new StringReader(input));
+        NGramSynonymTokenizer tokenizer = new NGramSynonymTokenizer(NGramSynonymTokenizer.DEFAULT_N_SIZE,
+                NGramSynonymTokenizer.DEFAULT_DELIMITERS, false, false, true, null);
+        tokenizer.setReader(new StringReader(input));
     tokenizer.reset();
     return tokenizer;
   }
@@ -273,6 +272,24 @@ public class NGramSynonymTokenizerTest {
     stream = a.tokenStream("f", new StringReader("ロンウイット"));
     stream.reset();
     assertTokenStream(stream, "ロンウイット,0,6,1");
+  }
+
+  @Test
+  public void testTokensWithSynonym() throws Exception {
+    Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, false, true, "abc,123");
+    TokenStream stream = a.tokenStream("f", new StringReader("123"));
+    stream.reset();
+    assertTokenStream(stream, "1,0,1,1/abc,0,3,0/2,1,2,0/3,2,3,0");
+
+    a = new NGramSynonymTokenizerTestAnalyzer(1, false, true, "abc,123");
+    stream = a.tokenStream("f", new StringReader("x123x"));
+    stream.reset();
+    assertTokenStream(stream, "x,0,1,1/1,1,2,1/abc,1,4,0/2,2,3,0/3,3,4,0/x,4,5,1");
+
+    a = new NGramSynonymTokenizerTestAnalyzer(2, false, true, "abc,123");
+    stream = a.tokenStream("f", new StringReader("x123x"));
+    stream.reset();
+    assertTokenStream(stream, "x,0,1,1/x1,0,2,0/12,1,3,1/abc,1,4,0/23,2,4,0/3x,3,5,0/x,4,5,1");
   }
 
   @Test
@@ -1404,6 +1421,7 @@ public class NGramSynonymTokenizerTest {
     final int n;
     final String delimiters;
     final boolean expand;
+    final boolean expandNgram;
     final SynonymMap synonyms;
     
     public NGramSynonymTokenizerTestAnalyzer(int n){
@@ -1415,17 +1433,22 @@ public class NGramSynonymTokenizerTest {
     }
     
     public NGramSynonymTokenizerTestAnalyzer(int n, String delimiters, boolean expand){
-      this(n, delimiters, expand, (String)null);
+      this(n, delimiters, expand, false, (String)null);
     }
-    
+
     public NGramSynonymTokenizerTestAnalyzer(int n, boolean expand, String synonyms){
-      this(n, NGramSynonymTokenizer.DEFAULT_DELIMITERS, expand, synonyms);
+      this(n, NGramSynonymTokenizer.DEFAULT_DELIMITERS, expand, false, synonyms);
     }
-    
-    public NGramSynonymTokenizerTestAnalyzer(int n, String delimiters, boolean expand, String synonyms){
+
+    public NGramSynonymTokenizerTestAnalyzer(int n, boolean expand, boolean expandNgram, String synonyms){
+      this(n, NGramSynonymTokenizer.DEFAULT_DELIMITERS, expand, expandNgram, synonyms);
+    }
+
+    public NGramSynonymTokenizerTestAnalyzer(int n, String delimiters, boolean expand, boolean expandNgram, String synonyms){
       this.n = n;
       this.delimiters = delimiters;
       this.expand = expand;
+      this.expandNgram = expandNgram;
       this.synonyms = getSynonymMap(synonyms, expand);
     }
     
@@ -1433,12 +1456,13 @@ public class NGramSynonymTokenizerTest {
       this.n = n;
       this.delimiters = delimiters;
       this.expand = expand;
+      this.expandNgram = false;
       this.synonyms = synonyms;
     }
 
     protected TokenStreamComponents createComponents(String fieldName) {
             final Tokenizer source = new NGramSynonymTokenizer(n,
-                    delimiters, expand, true, new SynonymLoader(null, null,
+                    delimiters, expand, expandNgram, true, new SynonymLoader(null, null,
                             expand, null) {
                         @Override
                         public SynonymMap getSynonymMap() {

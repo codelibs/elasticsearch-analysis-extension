@@ -49,6 +49,8 @@ public final class NGramSynonymTokenizer extends Tokenizer {
 
     private final boolean expand;
 
+    private final boolean expandNgram;
+
     private final boolean ignoreCase;
 
     private final SynonymLoader synonymLoader;
@@ -97,11 +99,12 @@ public final class NGramSynonymTokenizer extends Tokenizer {
 
     private final PositionIncrementAttribute posIncAttr = addAttribute(PositionIncrementAttribute.class);
 
-    protected NGramSynonymTokenizer(final int n, final String delimiters,
-            final boolean expand, final boolean ignoreCase, final SynonymLoader synonymLoader) {
+    protected NGramSynonymTokenizer(final int n, final String delimiters, final boolean expand, final boolean expandNgram,
+            final boolean ignoreCase, final SynonymLoader synonymLoader) {
         this.n = n;
         this.delimiters = delimiters;
         this.expand = expand;
+        this.expandNgram = expandNgram;
         this.ignoreCase = ignoreCase;
         if (synonymLoader != null) {
             if (synonymLoader.isReloadable()) {
@@ -269,6 +272,49 @@ public final class NGramSynonymTokenizer extends Tokenizer {
             nextStart = synonym.endOffset;
         }
         tokenizePartialBlock(nextStart, end, afterSynonymProduced);
+        if (expandNgram) {
+            tokenizeWholeBlockWithNGram();
+        }
+    }
+
+    void tokenizeWholeBlockWithNGram() {
+        int i = 0;
+        int j = 0;
+        final MyToken[] tokens = queue.toArray(new MyToken[queue.size()]);
+        queue.clear();
+        while (i + n <= block.length() && j < tokens.length) {
+            final MyToken synonymToken = tokens[j];
+            if (synonymToken.startOffset > i) {
+                queue.add(new MyToken(block.substring(i, i + n), i, i + n, 0));
+                i++;
+            } else if (synonymToken.startOffset < i) {
+                queue.add(synonymToken);
+                j++;
+            } else {
+                final String word = block.substring(i, i + n);
+                if (!synonymToken.word.equals(word)) {
+                    if (i + n < synonymToken.endOffset && synonymToken.posInc == 1) {
+                        queue.add(new MyToken(word, i, i + n, 1));
+                        queue.add(new MyToken(synonymToken.word, synonymToken.startOffset, synonymToken.endOffset, 0));
+                    } else {
+                        queue.add(synonymToken);
+                        queue.add(new MyToken(word, i, i + n, 0));
+                    }
+                } else {
+                    queue.add(synonymToken);
+                }
+                i++;
+                j++;
+            }
+        }
+        while (j < tokens.length) {
+            queue.add(tokens[j]);
+            j++;
+        }
+        while (i + n <= block.length()) {
+            queue.add(new MyToken(block.substring(i, i + n), i, i + n, 0));
+            i++;
+        }
     }
 
     void tokenizePartialBlock(final int startOffset, final int endOffset,
