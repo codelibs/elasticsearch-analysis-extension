@@ -291,17 +291,10 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                 queue.add(synonymToken);
                 j++;
             } else {
+                queue.add(synonymToken);
                 final String word = block.substring(i, i + n);
                 if (!synonymToken.word.equals(word)) {
-                    if (i + n < synonymToken.endOffset && synonymToken.posInc == 1) {
-                        queue.add(new MyToken(word, i, i + n, 1));
-                        queue.add(new MyToken(synonymToken.word, synonymToken.startOffset, synonymToken.endOffset, 0));
-                    } else {
-                        queue.add(synonymToken);
-                        queue.add(new MyToken(word, i, i + n, 0));
-                    }
-                } else {
-                    queue.add(synonymToken);
+                    queue.add(new MyToken(word, i, i + n, 0));
                 }
                 i++;
                 j++;
@@ -544,15 +537,15 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                 return 1;
             }
 
-            if (t1.endOffset < t2.endOffset) {
-                return -1;
-            } else if (t1.endOffset > t2.endOffset) {
-                return 1;
-            }
-
             if (t1.posInc > t2.posInc) {
                 return -1;
             } else if (t1.posInc < t2.posInc) {
+                return 1;
+            }
+
+            if (t1.endOffset < t2.endOffset) {
+                return -1;
+            } else if (t1.endOffset > t2.endOffset) {
                 return 1;
             }
 

@@ -274,17 +274,22 @@ public class NGramSynonymTokenizerTest {
         Analyzer a = new NGramSynonymTokenizerTestAnalyzer(1, false, true, "abc,123");
         TokenStream stream = a.tokenStream("f", new StringReader("123"));
         stream.reset();
-        assertTokenStream(stream, "1,0,1,1/abc,0,3,0/2,1,2,0/3,2,3,0");
+        assertTokenStream(stream, "abc,0,3,1/1,0,1,0/2,1,2,0/3,2,3,0");
+
+        a = new NGramSynonymTokenizerTestAnalyzer(1, false, true, "abc,123");
+        stream = a.tokenStream("f", new StringReader("abc"));
+        stream.reset();
+        assertTokenStream(stream, "abc,0,3,1/a,0,1,0/b,1,2,0/c,2,3,0");
 
         a = new NGramSynonymTokenizerTestAnalyzer(1, false, true, "abc,123");
         stream = a.tokenStream("f", new StringReader("x123x"));
         stream.reset();
-        assertTokenStream(stream, "x,0,1,1/1,1,2,1/abc,1,4,0/2,2,3,0/3,3,4,0/x,4,5,1");
+        assertTokenStream(stream, "x,0,1,1/abc,1,4,1/1,1,2,0/2,2,3,0/3,3,4,0/x,4,5,1");
 
         a = new NGramSynonymTokenizerTestAnalyzer(2, false, true, "abc,123");
         stream = a.tokenStream("f", new StringReader("x123x"));
         stream.reset();
-        assertTokenStream(stream, "x,0,1,1/x1,0,2,0/12,1,3,1/abc,1,4,0/23,2,4,0/3x,3,5,0/x,4,5,1");
+        assertTokenStream(stream, "x,0,1,1/x1,0,2,0/abc,1,4,1/12,1,3,0/23,2,4,0/3x,3,5,0/x,4,5,1");
     }
 
     @Test
