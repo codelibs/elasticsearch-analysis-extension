@@ -19,8 +19,6 @@ public final class NGramSynonymTokenizerFactory extends AbstractTokenizerFactory
 
     private final boolean expand;
 
-    private final boolean expandNgram;
-
     private SynonymLoader synonymLoader = null;
 
     public NGramSynonymTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name, final Settings settings) {
@@ -29,7 +27,8 @@ public final class NGramSynonymTokenizerFactory extends AbstractTokenizerFactory
         n = settings.getAsInt("n", NGramSynonymTokenizer.DEFAULT_N_SIZE);
         delimiters = settings.get("delimiters", NGramSynonymTokenizer.DEFAULT_DELIMITERS);
         expand = settings.getAsBoolean("expand", true);
-        expandNgram = settings.getAsBoolean("expand_ngram", false);
+
+        settings.getAsBoolean("expand_ngram", false); // TODO remove
 
         synonymLoader = new SynonymLoader(env, settings, expand, SynonymLoader.getAnalyzer(ignoreCase));
         if (synonymLoader.getSynonymMap() == null) {
@@ -45,6 +44,6 @@ public final class NGramSynonymTokenizerFactory extends AbstractTokenizerFactory
 
     @Override
     public Tokenizer create() {
-        return new NGramSynonymTokenizer(n, delimiters, expand, expandNgram, ignoreCase, synonymLoader);
+        return new NGramSynonymTokenizer(n, delimiters, expand, ignoreCase, synonymLoader);
     }
 }
