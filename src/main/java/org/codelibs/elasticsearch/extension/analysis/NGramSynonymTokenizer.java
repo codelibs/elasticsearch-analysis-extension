@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012-2022 CodeLibs Project and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.codelibs.elasticsearch.extension.analysis;
 
 /*
@@ -138,14 +153,7 @@ public final class NGramSynonymTokenizer extends Tokenizer {
     public boolean incrementToken() throws IOException {
         while (true) {
             final MyToken nextToken = getNextUniqueToken(queue, prevToken);
-            if (nextToken == null) {
-                getNextBlock();
-                if (block.length() == 0) {
-                    return false;
-                }
-                consultDictionary();
-                tokenizeWholeBlock();
-            } else {
+            if (nextToken != null) {
                 prevToken = nextToken;
                 clearAttributes();
                 termAttr.append(nextToken.word);
@@ -154,6 +162,12 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                 posIncAttr.setPositionIncrement(nextToken.posInc);
                 return true;
             }
+            getNextBlock();
+            if (block.length() == 0) {
+                return false;
+            }
+            consultDictionary();
+            tokenizeWholeBlock();
         }
     }
 
@@ -340,7 +354,8 @@ public final class NGramSynonymTokenizer extends Tokenizer {
             }
             if (ch == -1) {
                 break;
-            } else if (!isDelimiter(ch)) {
+            }
+            if (!isDelimiter(ch)) {
                 block.append((char) ch);
             } else if (block.length() > 0) {
                 break;
@@ -403,16 +418,7 @@ public final class NGramSynonymTokenizer extends Tokenizer {
         }
 
         public boolean identical(final MyToken o) {
-            if (o.posInc != 0) {
-                return false;
-            }
-            if (!word.equals(o.word)) {
-                return false;
-            }
-            if (startOffset != o.startOffset) {
-                return false;
-            }
-            if (endOffset != o.endOffset) {
+            if ((o.posInc != 0) || !word.equals(o.word) || (startOffset != o.startOffset) || (endOffset != o.endOffset)) {
                 return false;
             }
             return true;
@@ -431,16 +437,7 @@ public final class NGramSynonymTokenizer extends Tokenizer {
                 return false;
             }
             final MyToken o = (MyToken) other;
-            if (!word.equals(o.word)) {
-                return false;
-            }
-            if (startOffset != o.startOffset) {
-                return false;
-            }
-            if (endOffset != o.endOffset) {
-                return false;
-            }
-            if (posInc != o.posInc) {
+            if (!word.equals(o.word) || (startOffset != o.startOffset) || (endOffset != o.endOffset) || (posInc != o.posInc)) {
                 return false;
             }
             return true;
@@ -465,7 +462,7 @@ public final class NGramSynonymTokenizer extends Tokenizer {
           this.length = length;
           this.synonyms = synonyms;
         }
-    
+
         static enum Mode {
           PREV, SYN, AFTER;
         }
@@ -477,25 +474,29 @@ public final class NGramSynonymTokenizer extends Tokenizer {
         public int compare(final MyToken t1, final MyToken t2) {
             if (t1.startOffset < t2.startOffset) {
                 return -1;
-            } else if (t1.startOffset > t2.startOffset) {
+            }
+            if (t1.startOffset > t2.startOffset) {
                 return 1;
             }
 
             if (t1.endOffset < t2.endOffset) {
                 return -1;
-            } else if (t1.endOffset > t2.endOffset) {
+            }
+            if (t1.endOffset > t2.endOffset) {
                 return 1;
             }
 
             if (t1.posInc > t2.posInc) {
                 return -1;
-            } else if (t1.posInc < t2.posInc) {
+            }
+            if (t1.posInc < t2.posInc) {
                 return 1;
             }
 
             if (t1.seq < t2.seq) {
                 return -1;
-            } else if (t1.seq > t2.seq) {
+            }
+            if (t1.seq > t2.seq) {
                 return 1;
             }
 

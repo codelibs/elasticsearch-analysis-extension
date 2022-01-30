@@ -1,22 +1,18 @@
 /*
- * Licensed to Elasticsearch under one or more contributor
- * license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright
- * ownership. Elasticsearch licenses this file to you under
- * the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
+ * Copyright 2012-2022 CodeLibs Project and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
-
 package org.codelibs.elasticsearch.extension.kuromoji.index.analysis;
 
 import java.io.IOException;
@@ -49,9 +45,9 @@ public class KuromojiTokenizerFactory extends AbstractTokenizerFactory {
     private final String nBestExamples;
     private final int nBestCost;
 
-    private boolean discartPunctuation;
+    private final boolean discartPunctuation;
 
-    public KuromojiTokenizerFactory(IndexSettings indexSettings, Environment env, String name, Settings settings) {
+    public KuromojiTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name, final Settings settings) {
         super(indexSettings, settings, name);
         mode = getMode(settings);
         userDictionary = getUserDictionary(env, settings);
@@ -60,42 +56,42 @@ public class KuromojiTokenizerFactory extends AbstractTokenizerFactory {
         nBestExamples = settings.get(NBEST_EXAMPLES);
     }
 
-    public static UserDictionary getUserDictionary(Environment env, Settings settings) {
+    public static UserDictionary getUserDictionary(final Environment env, final Settings settings) {
         if (settings.get(USER_DICT_PATH_OPTION) != null && settings.get(USER_DICT_RULES_OPTION) != null) {
-            throw new IllegalArgumentException("It is not allowed to use [" + USER_DICT_PATH_OPTION + "] in conjunction" +
-                " with [" + USER_DICT_RULES_OPTION + "]");
+            throw new IllegalArgumentException(
+                    "It is not allowed to use [" + USER_DICT_PATH_OPTION + "] in conjunction" + " with [" + USER_DICT_RULES_OPTION + "]");
         }
         try {
-            List<String> ruleList = Analysis.getWordList(env, settings, USER_DICT_PATH_OPTION, USER_DICT_RULES_OPTION, false);
+            final List<String> ruleList = Analysis.getWordList(env, settings, USER_DICT_PATH_OPTION, USER_DICT_RULES_OPTION, false);
             if (ruleList == null || ruleList.isEmpty()) {
                 return null;
             }
-            Set<String> dup = new HashSet<>();
+            final Set<String> dup = new HashSet<>();
             int lineNum = 0;
-            for (String line : ruleList) {
+            for (final String line : ruleList) {
                 // ignore comments
-                if (line.startsWith("#") == false) {
-                    String[] values = CSVUtil.parse(line);
-                    if (dup.add(values[0]) == false) {
-                        throw new IllegalArgumentException("Found duplicate term [" + values[0] + "] in user dictionary " +
-                            "at line [" + lineNum + "]");
+                if (!line.startsWith("#")) {
+                    final String[] values = CSVUtil.parse(line);
+                    if (!dup.add(values[0])) {
+                        throw new IllegalArgumentException(
+                                "Found duplicate term [" + values[0] + "] in user dictionary " + "at line [" + lineNum + "]");
                     }
                 }
-                ++ lineNum;
+                ++lineNum;
             }
-            StringBuilder sb = new StringBuilder();
-            for (String line : ruleList) {
+            final StringBuilder sb = new StringBuilder();
+            for (final String line : ruleList) {
                 sb.append(line).append(System.lineSeparator());
             }
             return UserDictionary.open(new StringReader(sb.toString()));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ElasticsearchException("failed to load kuromoji user dictionary", e);
         }
     }
 
-    public static JapaneseTokenizer.Mode getMode(Settings settings) {
+    public static JapaneseTokenizer.Mode getMode(final Settings settings) {
         JapaneseTokenizer.Mode mode = JapaneseTokenizer.DEFAULT_MODE;
-        String modeSetting = settings.get("mode", null);
+        final String modeSetting = settings.get("mode", null);
         if (modeSetting != null) {
             if ("search".equalsIgnoreCase(modeSetting)) {
                 mode = JapaneseTokenizer.Mode.SEARCH;
@@ -110,7 +106,7 @@ public class KuromojiTokenizerFactory extends AbstractTokenizerFactory {
 
     @Override
     public Tokenizer create() {
-        JapaneseTokenizer t = new JapaneseTokenizer(userDictionary, discartPunctuation, mode);
+        final JapaneseTokenizer t = new JapaneseTokenizer(userDictionary, discartPunctuation, mode);
         int nBestCost = this.nBestCost;
         if (nBestExamples != null) {
             nBestCost = Math.max(nBestCost, t.calcNBestCost(nBestExamples));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014 the CodeLibs Project and the Others.
+ * Copyright 2012-2022 CodeLibs Project and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 package org.codelibs.elasticsearch.extension.analysis;
 
 import java.io.File;
@@ -40,18 +39,16 @@ import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
 
-public class ReloadableKuromojiTokenizerFactory extends
-        AbstractTokenizerFactory {
+public class ReloadableKuromojiTokenizerFactory extends AbstractTokenizerFactory {
 
     private static final boolean VERBOSE = false; // debug
 
     protected static final Reader ILLEGAL_STATE_READER = new Reader() {
         @Override
         public int read(final char[] cbuf, final int off, final int len) {
-            throw new IllegalStateException(
-                    "TokenStream contract violation: reset()/close() call missing, "
-                            + "reset() called multiple times, or subclass does not call super.reset(). "
-                            + "Please see Javadocs of TokenStream class for more information about the correct consuming workflow.");
+            throw new IllegalStateException("TokenStream contract violation: reset()/close() call missing, "
+                    + "reset() called multiple times, or subclass does not call super.reset(). "
+                    + "Please see Javadocs of TokenStream class for more information about the correct consuming workflow.");
         }
 
         @Override
@@ -87,13 +84,13 @@ public class ReloadableKuromojiTokenizerFactory extends
 
     private final boolean discartPunctuation;
 
-    public ReloadableKuromojiTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name, final Settings settings) {
+    public ReloadableKuromojiTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name,
+            final Settings settings) {
         super(indexSettings, settings, name);
         this.env = env;
         this.settings = settings;
         mode = KuromojiTokenizerFactory.getMode(settings);
-        userDictionary = KuromojiTokenizerFactory.getUserDictionary(env,
-                settings);
+        userDictionary = KuromojiTokenizerFactory.getUserDictionary(env, settings);
         discartPunctuation = settings.getAsBoolean("discard_punctuation", true);
 
         inputPendingField = getAccessibleField(Tokenizer.class, "inputPending");
@@ -114,18 +111,14 @@ public class ReloadableKuromojiTokenizerFactory extends
                     reloadableFile = file;
                     dictionaryTimestamp = reloadableFile.lastModified();
 
-                    reloadInterval = settings.getAsTime("reload_interval",
-                            TimeValue.timeValueMinutes(1)).getMillis();
+                    reloadInterval = settings.getAsTime("reload_interval", TimeValue.timeValueMinutes(1)).getMillis();
 
                     if (VERBOSE) {
-                        System.out.println("Check "
-                                + reloadableFile.getAbsolutePath()
-                                + " (interval: " + reloadInterval + "ms)");
+                        System.out.println("Check " + reloadableFile.getAbsolutePath() + " (interval: " + reloadInterval + "ms)");
                     }
                 }
             } catch (final Exception e) {
-                throw new IllegalArgumentException(
-                        "Could not access " + monitoringFilePath, e);
+                throw new IllegalArgumentException("Could not access " + monitoringFilePath, e);
             }
         }
 
@@ -137,15 +130,13 @@ public class ReloadableKuromojiTokenizerFactory extends
     }
 
     private void updateUserDictionary() {
-        if (reloadableFile != null
-                && System.currentTimeMillis() - lastChecked > reloadInterval) {
+        if (reloadableFile != null && System.currentTimeMillis() - lastChecked > reloadInterval) {
             lastChecked = System.currentTimeMillis();
             final long timestamp = reloadableFile.lastModified();
             if (timestamp != dictionaryTimestamp) {
                 synchronized (reloadableFile) {
                     if (timestamp != dictionaryTimestamp) {
-                        userDictionary = KuromojiTokenizerFactory
-                                .getUserDictionary(env, settings);
+                        userDictionary = KuromojiTokenizerFactory.getUserDictionary(env, settings);
                         dictionaryTimestamp = timestamp;
                     }
                 }
@@ -160,11 +151,8 @@ public class ReloadableKuromojiTokenizerFactory extends
         private long tokenizerTimestamp;
 
         TokenizerWrapper() {
-            super();
-
             tokenizerTimestamp = dictionaryTimestamp;
-            tokenizer = new JapaneseTokenizer(userDictionary,
-                    discartPunctuation, mode);
+            tokenizer = new JapaneseTokenizer(userDictionary, discartPunctuation, mode);
 
             try {
                 final Field attributesField = getAccessibleField(AttributeSource.class, "attributes");
@@ -179,8 +167,7 @@ public class ReloadableKuromojiTokenizerFactory extends
                 final Object currentStateObj = currentStateField.get(tokenizer);
                 currentStateField.set(this, currentStateObj);
             } catch (final Exception e) {
-                throw new IllegalStateException(
-                        "Failed to update the tokenizer.", e);
+                throw new IllegalStateException("Failed to update the tokenizer.", e);
             }
         }
 
@@ -195,9 +182,7 @@ public class ReloadableKuromojiTokenizerFactory extends
 
             if (dictionaryTimestamp > tokenizerTimestamp) {
                 if (VERBOSE) {
-                    System.out.println("Update KuromojiTokenizer ("
-                            + tokenizerTimestamp + "," + dictionaryTimestamp
-                            + ")");
+                    System.out.println("Update KuromojiTokenizer (" + tokenizerTimestamp + "," + dictionaryTimestamp + ")");
                 }
                 if (userDictionary != null) {
                     try {
@@ -205,15 +190,12 @@ public class ReloadableKuromojiTokenizerFactory extends
                         userDictionaryField.set(tokenizer, userDictionary);
                         final TokenInfoFST userFst = userDictionary.getFST();
                         userFSTField.set(tokenizer, userFst);
-                        userFSTReaderField.set(tokenizer,
-                                userFst.getBytesReader());
+                        userFSTReaderField.set(tokenizer, userFst.getBytesReader());
                         @SuppressWarnings("unchecked")
-                        final
-                        EnumMap<Type, Dictionary> dictionaryMap = (EnumMap<Type, Dictionary>) dictionaryMapField.get(tokenizer);
+                        final EnumMap<Type, Dictionary> dictionaryMap = (EnumMap<Type, Dictionary>) dictionaryMapField.get(tokenizer);
                         dictionaryMap.put(Type.USER, userDictionary);
                     } catch (final Exception e) {
-                        throw new IllegalStateException(
-                                "Failed to update the tokenizer.", e);
+                        throw new IllegalStateException("Failed to update the tokenizer.", e);
                     }
                 }
             }

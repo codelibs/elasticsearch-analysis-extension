@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012-2022 CodeLibs Project and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.codelibs.elasticsearch.extension.analysis;
 
 import static org.codelibs.elasticsearch.runner.ElasticsearchClusterRunner.newConfigs;
@@ -38,7 +53,8 @@ public class CharTypeFilterFactoryTest {
                 // settingsBuilder.putList("discovery.seed_hosts", "127.0.0.1:9301");
                 // settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
-        }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode).pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
+        }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode)
+                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
 
     }
 
@@ -55,14 +71,10 @@ public class CharTypeFilterFactoryTest {
 
         final String index = "dataset";
 
-        final String indexSettings = "{\"index\":{\"analysis\":{"
-                + "\"filter\":{"
-                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":true,\"digit\":false,\"letter\":false}"
-                + "},"//
-                + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
-                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}"
-                + "}"//
+        final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
+                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":true,\"digit\":false,\"letter\":false}" + "},"//
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
+                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}" + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());
         runner.ensureYellow();
@@ -71,8 +83,7 @@ public class CharTypeFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser()).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(4, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
@@ -89,14 +100,10 @@ public class CharTypeFilterFactoryTest {
 
         final String index = "dataset";
 
-        final String indexSettings = "{\"index\":{\"analysis\":{"
-                + "\"filter\":{"
-                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":true,\"letter\":false}"
-                + "},"//
-                + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
-                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}"
-                + "}"//
+        final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
+                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":true,\"letter\":false}" + "},"//
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
+                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}" + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());
         runner.ensureYellow();
@@ -106,8 +113,7 @@ public class CharTypeFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser()).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(4, tokens.size());
                 assertEquals("aa1", tokens.get(0).get("token").toString());
                 assertEquals("111", tokens.get(1).get("token").toString());
@@ -124,14 +130,10 @@ public class CharTypeFilterFactoryTest {
 
         final String index = "dataset";
 
-        final String indexSettings = "{\"index\":{\"analysis\":{"
-                + "\"filter\":{"
-                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":false,\"letter\":true}"
-                + "},"//
-                + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
-                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}"
-                + "}"//
+        final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
+                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":false,\"letter\":true}" + "},"//
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
+                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}" + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());
         runner.ensureYellow();
@@ -141,8 +143,7 @@ public class CharTypeFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser()).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(7, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
@@ -162,14 +163,10 @@ public class CharTypeFilterFactoryTest {
 
         final String index = "dataset";
 
-        final String indexSettings = "{\"index\":{\"analysis\":{"
-                + "\"filter\":{"
-                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":true,\"letter\":true}"
-                + "},"//
-                + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
-                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}"
-                + "}"//
+        final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
+                + "\"alphabetic_filter\":{\"type\":\"char_type\",\"alphabetic\":false,\"digit\":true,\"letter\":true}" + "},"//
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\"},"
+                + "\"ja_alphabetic_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"whitespace\",\"filter\":[\"alphabetic_filter\"]}" + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());
         runner.ensureYellow();
@@ -179,8 +176,7 @@ public class CharTypeFilterFactoryTest {
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
                     .body("{\"analyzer\":\"ja_alphabetic_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response
-                        .getContent(EcrCurl.jsonParser()).get("tokens");
+                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals(9, tokens.size());
                 assertEquals("aaa", tokens.get(0).get("token").toString());
                 assertEquals("aa1", tokens.get(1).get("token").toString());
