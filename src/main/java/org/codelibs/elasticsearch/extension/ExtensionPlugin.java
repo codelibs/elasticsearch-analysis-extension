@@ -30,17 +30,9 @@ import org.codelibs.elasticsearch.extension.analysis.PatternConcatenationFilterF
 import org.codelibs.elasticsearch.extension.analysis.PosConcatenationFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.ProlongedSoundMarkCharFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.ReloadableKeywordMarkerFilterFactory;
-import org.codelibs.elasticsearch.extension.analysis.ReloadableKuromojiTokenizerFactory;
 import org.codelibs.elasticsearch.extension.analysis.ReloadableStopFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.StopTokenPrefixFilterFactory;
 import org.codelibs.elasticsearch.extension.analysis.StopTokenSuffixFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.JapaneseStopTokenFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiBaseFormFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiIterationMarkCharFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiKatakanaStemmerFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiNumberFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiPartOfSpeechFilterFactory;
-import org.codelibs.elasticsearch.extension.kuromoji.index.analysis.KuromojiReadingFormFilterFactory;
 import org.elasticsearch.index.analysis.CharFilterFactory;
 import org.elasticsearch.index.analysis.TokenFilterFactory;
 import org.elasticsearch.index.analysis.TokenizerFactory;
@@ -55,19 +47,12 @@ public class ExtensionPlugin extends Plugin implements AnalysisPlugin {
         final Map<String, AnalysisProvider<CharFilterFactory>> extra = new HashMap<>();
         extra.put("iteration_mark", IterationMarkCharFilterFactory::new);
         extra.put("prolonged_sound_mark", ProlongedSoundMarkCharFilterFactory::new);
-        extra.put("reloadable_kuromoji_iteration_mark", KuromojiIterationMarkCharFilterFactory::new);
         return extra;
     }
 
     @Override
     public Map<String, AnalysisProvider<TokenFilterFactory>> getTokenFilters() {
         final Map<String, AnalysisProvider<TokenFilterFactory>> extra = new HashMap<>();
-        extra.put("reloadable_kuromoji_baseform", KuromojiBaseFormFilterFactory::new);
-        extra.put("reloadable_kuromoji_part_of_speech", KuromojiPartOfSpeechFilterFactory::new);
-        extra.put("reloadable_kuromoji_readingform", KuromojiReadingFormFilterFactory::new);
-        extra.put("reloadable_kuromoji_stemmer", KuromojiKatakanaStemmerFactory::new);
-        extra.put("reloadable_kuromoji_number", KuromojiNumberFilterFactory::new);
-        extra.put("reloadable_ja_stop", JapaneseStopTokenFilterFactory::new);
         extra.put("kanji_number", KanjiNumberFilterFactory::new);
         extra.put("kuromoji_pos_concat", PosConcatenationFilterFactory::new);
         extra.put("char_type", CharTypeFilterFactory::new);
@@ -86,8 +71,6 @@ public class ExtensionPlugin extends Plugin implements AnalysisPlugin {
     @Override
     public Map<String, AnalysisProvider<TokenizerFactory>> getTokenizers() {
         final Map<String, AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
-        extra.put("reloadable_kuromoji_tokenizer", ReloadableKuromojiTokenizerFactory::new);
-        extra.put("reloadable_kuromoji", ReloadableKuromojiTokenizerFactory::new);
         extra.put("ngram_synonym", NGramSynonymTokenizerFactory::new);
         return extra;
     }

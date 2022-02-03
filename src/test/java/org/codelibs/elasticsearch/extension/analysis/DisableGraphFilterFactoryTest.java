@@ -57,7 +57,8 @@ public class DisableGraphFilterFactoryTest {
                 // settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
         }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode)
-                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
+                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin,"
+                        + "org.codelibs.elasticsearch.extension.kuromoji.plugin.analysis.kuromoji.AnalysisKuromojiPlugin"));
 
     }
 
@@ -77,12 +78,12 @@ public class DisableGraphFilterFactoryTest {
 
         final String index1Settings = "{\"index\":{\"analysis\":{"//
                 + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\",\"filter\":[\"disable_graph\"]}"
+                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\",\"filter\":[\"disable_graph\"]}"
                 + "}"//
                 + "}}}";
         runner.createIndex(index1, Settings.builder().loadFromSource(index1Settings, XContentType.JSON).build());
         final String index2Settings = "{\"index\":{\"analysis\":{"//
-                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\"}" + "}"//
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\"}" + "}"//
                 + "}}}";
         runner.createIndex(index2, Settings.builder().loadFromSource(index2Settings, XContentType.JSON).build());
         runner.ensureYellow();
@@ -91,11 +92,9 @@ public class DisableGraphFilterFactoryTest {
                 .body("{\"analyzer\":\"ja_analyzer\",\"text\":\"レッドハウスフーズ\"}").execute()) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
-            // FIXME
-            //            assertEquals(3, tokens.size());
-            //            assertEquals("レッド", tokens.get(0).get("token").toString());
-            //            assertEquals("レッドハウスフーズ", tokens.get(1).get("token").toString());
-            //            assertEquals("ハウスフーズ", tokens.get(2).get("token").toString());
+            assertEquals(2, tokens.size());
+            assertEquals("レッド", tokens.get(0).get("token").toString());
+            assertEquals("ハウスフーズ", tokens.get(1).get("token").toString());
         }
 
         runner.insert(index1, "1",

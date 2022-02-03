@@ -63,7 +63,8 @@ public class PosConcatenationFilterFactoryTest {
                 // settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
         }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode)
-                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
+                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin,"
+                        + "org.codelibs.elasticsearch.extension.kuromoji.plugin.analysis.kuromoji.AnalysisKuromojiPlugin"));
 
         numberSuffixFiles = null;
     }
@@ -95,8 +96,8 @@ public class PosConcatenationFilterFactoryTest {
 
         final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
                 + "\"tag_concat_filter\":{\"type\":\"kuromoji_pos_concat\",\"tags_path\":\"tags.txt\"}" + "},"//
-                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\"},"
-                + "\"ja_concat_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\",\"filter\":[\"tag_concat_filter\"]}"
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\"},"
+                + "\"ja_concat_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\",\"filter\":[\"tag_concat_filter\"]}"
                 + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());

@@ -110,12 +110,10 @@ public class ExtensionPluginTest {
         final String index = "dataset";
 
         final String indexSettings = "{\"index\":{\"analysis\":{" + "\"tokenizer\":{"//
-                + "\"kuromoji_user_dict\":{\"type\":\"kuromoji_tokenizer\",\"mode\":\"extended\",\"user_dictionary\":\"userdict_ja.txt\"},"
-                + "\"kuromoji_user_dict_reload\":{\"type\":\"reloadable_kuromoji\",\"mode\":\"extended\",\"user_dictionary\":\"userdict_ja.txt\",\"reload_interval\":\"1s\"}"
+                + "\"kuromoji_user_dict\":{\"type\":\"kuromoji_tokenizer\",\"mode\":\"extended\",\"user_dictionary\":\"userdict_ja.txt\"}"
                 + "},"//
                 + "\"analyzer\":{"
-                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_user_dict\",\"filter\":[\"reloadable_kuromoji_stemmer\"]},"
-                + "\"ja_reload_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_user_dict_reload\",\"filter\":[\"reloadable_kuromoji_stemmer\"]}"
+                + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_user_dict\",\"filter\":[\"kuromoji_stemmer\"]}"
                 + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());
@@ -134,12 +132,6 @@ public class ExtensionPluginTest {
                 // msg1
                 .startObject("msg1")//
                 .field("type", "text")//
-                .field("analyzer", "ja_reload_analyzer")//
-                .endObject()//
-
-                // msg2
-                .startObject("msg2")//
-                .field("type", "text")//
                 .field("analyzer", "ja_analyzer")//
                 .endObject()//
 
@@ -147,7 +139,7 @@ public class ExtensionPluginTest {
                 .endObject();
         runner.createMapping(index, mappingBuilder);
 
-        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"東京スカイツリー\", \"msg2\":\"東京スカイツリー\", \"id\":\"1\"}");
+        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"東京スカイツリー\", \"id\":\"1\"}");
         assertEquals(RestStatus.CREATED, indexResponse1.status());
         runner.refresh();
 
@@ -155,10 +147,9 @@ public class ExtensionPluginTest {
         for (int i = 0; i < 1000; i++) {
             text = "東京スカイツリー";
             assertDocCount(1, index, "msg1", text);
-            assertDocCount(1, index, "msg2", text);
 
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
-                    .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
+                    .body("{\"analyzer\":\"ja_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("東京", tokens.get(0).get("token").toString());
@@ -167,45 +158,11 @@ public class ExtensionPluginTest {
 
             text = "朝青龍";
             try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
-                    .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
+                    .body("{\"analyzer\":\"ja_analyzer\",\"text\":\"" + text + "\"}").execute()) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
                 assertEquals("朝", tokens.get(0).get("token").toString());
                 assertEquals("青龍", tokens.get(1).get("token").toString());
-            }
-        }
-
-        // changing a file timestamp
-        Thread.sleep(2000);
-
-        for (int i = 0; i < numOfNode; i++) {
-            updateDictionary(userDictFiles[i], "東京スカイツリー,東京 スカイ ツリー,トウキョウ スカイ ツリー,カスタム名詞\n" + "朝青龍,朝青龍,アサショウリュウ,人名");
-        }
-
-        final IndexResponse indexResponse2 = runner.insert(index, "2", "{\"msg1\":\"東京スカイツリー\", \"msg2\":\"東京スカイツリー\", \"id\":\"2\"}");
-        assertEquals(RestStatus.CREATED, indexResponse2.status());
-        runner.refresh();
-
-        for (int i = 0; i < 1000; i++) {
-            text = "東京スカイツリー";
-            assertDocCount(1, index, "msg1", text);
-            assertDocCount(2, index, "msg2", text);
-
-            try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
-                    .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
-                @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
-                assertEquals("東京", tokens.get(0).get("token").toString());
-                assertEquals("スカイ", tokens.get(1).get("token").toString());
-                assertEquals("ツリー", tokens.get(2).get("token").toString());
-            }
-
-            text = "朝青龍";
-            try (CurlResponse response = EcrCurl.post(node, "/" + index + "/_analyze").header("Content-Type", "application/json")
-                    .body("{\"analyzer\":\"ja_reload_analyzer\",\"text\":\"" + text + "\"}").execute()) {
-                @SuppressWarnings("unchecked")
-                List<Map<String, Object>> tokens = (List<Map<String, Object>>) response.getContent(EcrCurl.jsonParser()).get("tokens");
-                assertEquals(text, tokens.get(0).get("token").toString());
             }
         }
     }

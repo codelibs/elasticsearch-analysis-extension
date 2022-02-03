@@ -54,7 +54,8 @@ public class StopTokenPrefixFilterFactoryTest {
                 // settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
         }).build(newConfigs().clusterName(clusterName).numOfNode(numOfNode)
-                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin"));
+                .pluginTypes("org.codelibs.elasticsearch.extension.ExtensionPlugin,"
+                        + "org.codelibs.elasticsearch.extension.kuromoji.plugin.analysis.kuromoji.AnalysisKuromojiPlugin"));
 
     }
 
@@ -73,8 +74,8 @@ public class StopTokenPrefixFilterFactoryTest {
 
         final String indexSettings = "{\"index\":{\"analysis\":{" + "\"filter\":{"
                 + "\"stop_prefix_filter\":{\"type\":\"stop_prefix\",\"stopwords\":[\"bbb\",\"ddd\"],\"ignore_case\":true}" + "},"//
-                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\"},"
-                + "\"ja_stop_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"reloadable_kuromoji_tokenizer\",\"filter\":[\"stop_prefix_filter\"]}"
+                + "\"analyzer\":{" + "\"ja_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\"},"
+                + "\"ja_stop_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"kuromoji_tokenizer\",\"filter\":[\"stop_prefix_filter\"]}"
                 + "}"//
                 + "}}}";
         runner.createIndex(index, Settings.builder().loadFromSource(indexSettings, XContentType.JSON).build());

@@ -221,33 +221,3 @@ For example, "10" and "years" are converted to "10years".
     }'
 
 
-### ReloadableKuromojiTokenizer (Tokenizer)
-
-ReloadableKuromojiTokenizer reloads a user-dictionary file when it's updated.
-To use this tokenizer, replace "kuromoji\_tokenizer" with "reloadable\_kuromoji" at the "type" property as below.
-
-    curl -XPUT 'http://localhost:9200/sample/' -d'
-    {
-        "settings": {
-            "index":{
-                "analysis":{
-                    "tokenizer" : {
-                        "kuromoji_user_dict" : {
-                            "type" : "reloadable_kuromoji",
-                            "mode" : "extended",
-                            "discard_punctuation" : "false",
-                            "user_dictionary" : "userdict_ja.txt"
-                        }
-                    },
-                    "analyzer" : {
-                        "my_analyzer" : {
-                            "type" : "custom",
-                            "tokenizer" : "kuromoji_user_dict"
-                        }
-                    }
-                }
-            }
-        }
-    }'
-
-Note that you might lose documents in a result when updating a dictionary file because of changing terms.
