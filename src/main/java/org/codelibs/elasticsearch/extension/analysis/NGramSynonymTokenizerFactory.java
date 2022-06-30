@@ -15,7 +15,9 @@
  */
 package org.codelibs.elasticsearch.extension.analysis;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
@@ -39,6 +41,9 @@ public final class NGramSynonymTokenizerFactory extends AbstractTokenizerFactory
     public NGramSynonymTokenizerFactory(final IndexSettings indexSettings, final Environment env, final String name,
             final Settings settings) {
         super(indexSettings, settings, name);
+
+        final Logger logger = Loggers.getLogger(getClass(), indexSettings.getIndex());
+
         ignoreCase = settings.getAsBoolean("ignore_case", true);
         n = settings.getAsInt("n", NGramSynonymTokenizer.DEFAULT_N_SIZE);
         delimiters = settings.get("delimiters", NGramSynonymTokenizer.DEFAULT_DELIMITERS);
