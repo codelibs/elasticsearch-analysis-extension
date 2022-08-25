@@ -42,7 +42,7 @@ public class JapaneseStopTokenFilterFactory extends AbstractTokenFilterFactory {
 
     public JapaneseStopTokenFilterFactory(final IndexSettings indexSettings, final Environment env, final String name,
             final Settings settings) {
-        super(indexSettings, name, settings);
+        super(name, settings);
         this.ignoreCase = settings.getAsBoolean("ignore_case", false);
         this.removeTrailing = settings.getAsBoolean("remove_trailing", true);
         this.stopWords =

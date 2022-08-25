@@ -32,7 +32,7 @@ public class CharTypeFilterFactory extends AbstractTokenFilterFactory {
 
     public CharTypeFilterFactory(final IndexSettings indexSettings, final Environment environment, final String name,
             final Settings settings) {
-        super(indexSettings, name, settings);
+        super(name, settings);
 
         alphabetic = settings.getAsBoolean("alphabetic", true);
         digit = settings.getAsBoolean("digit", true);

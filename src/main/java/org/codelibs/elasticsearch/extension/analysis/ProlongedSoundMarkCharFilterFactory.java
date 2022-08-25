@@ -28,7 +28,7 @@ public class ProlongedSoundMarkCharFilterFactory extends AbstractCharFilterFacto
 
     public ProlongedSoundMarkCharFilterFactory(final IndexSettings indexSettings, final Environment env, final String name,
             final Settings settings) {
-        super(indexSettings, name);
+        super(name);
         final String value = settings.get("replacement");
         if (value == null || value.length() == 0) {
             replacement = '\u30fc';

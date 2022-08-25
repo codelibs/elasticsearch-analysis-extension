@@ -31,7 +31,7 @@ public class KuromojiIterationMarkCharFilterFactory extends AbstractCharFilterFa
 
     public KuromojiIterationMarkCharFilterFactory(final IndexSettings indexSettings, final Environment env, final String name,
             final Settings settings) {
-        super(indexSettings, name);
+        super(name);
         normalizeKanji = settings.getAsBoolean("normalize_kanji", JapaneseIterationMarkCharFilter.NORMALIZE_KANJI_DEFAULT);
         normalizeKana = settings.getAsBoolean("normalize_kana", JapaneseIterationMarkCharFilter.NORMALIZE_KANA_DEFAULT);
     }
