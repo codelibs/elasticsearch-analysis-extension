@@ -167,7 +167,12 @@ public class SynonymLoader {
                 reloadInterval = settings.getAsTime("reload_interval", TimeValue.timeValueMinutes(1)).getMillis();
 
             } else {
-                reader = Analysis.getReaderFromFile(env, settings, "synonyms_path");
+                String filePath = settings.get("synonyms_path", null);
+                if (filePath == null) {
+                    reader = new StringReader("");
+                }else {
+                    reader = Analysis.getReaderFromFile(env, filePath, "synonyms_path");
+                }
             }
         } else {
             reader = new StringReader("");
