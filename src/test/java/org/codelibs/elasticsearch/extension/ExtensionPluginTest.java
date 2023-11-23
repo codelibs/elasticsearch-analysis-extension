@@ -31,7 +31,7 @@ import java.util.Map;
 import org.codelibs.curl.CurlResponse;
 import org.codelibs.elasticsearch.runner.ElasticsearchClusterRunner;
 import org.codelibs.elasticsearch.runner.net.EcrCurl;
-import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.Settings.Builder;
@@ -139,7 +139,7 @@ public class ExtensionPluginTest {
                 .endObject();
         runner.createMapping(index, mappingBuilder);
 
-        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"東京スカイツリー\", \"id\":\"1\"}");
+        final DocWriteResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"東京スカイツリー\", \"id\":\"1\"}");
         assertEquals(RestStatus.CREATED, indexResponse1.status());
         runner.refresh();
 
@@ -207,7 +207,7 @@ public class ExtensionPluginTest {
                 .endObject();
         runner.createMapping(index, mappingBuilder);
 
-        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"時々\", \"msg2\":\"時々\", \"id\":\"1\"}");
+        final DocWriteResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"時々\", \"msg2\":\"時々\", \"id\":\"1\"}");
         assertEquals(RestStatus.CREATED, indexResponse1.status());
         runner.refresh();
 
@@ -271,7 +271,7 @@ public class ExtensionPluginTest {
                 .endObject();
         runner.createMapping(index, mappingBuilder);
 
-        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"あ‐\", \"msg2\":\"あ‐\", \"id\":\"1\"}");
+        final DocWriteResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"あ‐\", \"msg2\":\"あ‐\", \"id\":\"1\"}");
         assertEquals(RestStatus.CREATED, indexResponse1.status());
         runner.refresh();
 
@@ -335,7 +335,7 @@ public class ExtensionPluginTest {
                 .endObject();
         runner.createMapping(index, mappingBuilder);
 
-        final IndexResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"十二時間\", \"msg2\":\"十二時間\", \"id\":\"1\"}");
+        final DocWriteResponse indexResponse1 = runner.insert(index, "1", "{\"msg1\":\"十二時間\", \"msg2\":\"十二時間\", \"id\":\"1\"}");
         assertEquals(RestStatus.CREATED, indexResponse1.status());
         runner.refresh();
 
